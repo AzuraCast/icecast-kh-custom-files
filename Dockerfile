@@ -2,9 +2,10 @@ FROM ubuntu:jammy
 
 RUN apt-get update \
     && apt-get install -q -y --no-install-recommends \
-        apt-transport-https ca-certificates \
-        build-essential libxml2 libxslt1-dev libvorbis-dev libssl-dev libcurl4-openssl-dev openssl \
-        curl tar \
+        apt-transport-https ca-certificates curl tar \
+        libxml2 openssl
+
+RUN apt-get install -q -y --no-install-recommends build-essential  libxslt1-dev libvorbis-dev libssl-dev libcurl4-openssl-dev \
     && mkdir -p /tmp/icecast_build \
     && cd /tmp/icecast_build \
     && curl -fsSL https://github.com/karlheyes/icecast-kh/archive/refs/tags/icecast-2.4.0-kh22.tar.gz -o icecast.tar.gz \
