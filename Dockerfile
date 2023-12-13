@@ -2,6 +2,7 @@ FROM ubuntu:jammy
 
 RUN apt-get update \
     && apt-get install -q -y --no-install-recommends \
+        apt-transport-https ca-certificates \
         build-essential libxml2 libxslt1-dev libvorbis-dev libssl-dev libcurl4-openssl-dev openssl \
         curl tar \
     && mkdir -p /tmp/icecast_build \
