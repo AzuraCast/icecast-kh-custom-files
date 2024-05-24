@@ -34,21 +34,43 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Docker Metadata
-        id: meta
+      - name: Build Docker Metadata (Debian)
+        id: meta_debian
         uses: docker/metadata-action@v4
         with:
           images: |
             ghcr.io/azuracast/icecast-kh-ac
           tags: |
             type=raw,value=latest,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
+            type=raw,value=latest-debian,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
             type=ref,event=tag
 
-      - name: Publish to Docker Hub
+      - name: Publish to Docker Hub (Debian)
         uses: depot/build-push-action@v1
         with:
           context: .
+          file: Dockerfile.debian
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta_debian.outputs.tags }}
+          labels: ${{ steps.meta_debian.outputs.labels }}
+      
+      - name: Build Docker Metadata (Alpine)
+        id: meta_alpine
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ghcr.io/azuracast/icecast-kh-ac
+          tags: |
+            type=raw,value=latest-alpine,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
+            type=ref,event=tag,suffix=-alpine
+
+      - name: Publish to Docker Hub (Alpine)
+        uses: depot/build-push-action@v1
+        with:
+          context: .
+          file: Dockerfile.alpine
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.meta_alpine.outputs.tags }}
+          labels: ${{ steps.meta_alpine.outputs.labels }}
